@@ -98,7 +98,10 @@
         10.1 abrimos el archivo en github
         10.2 seleccionamos el boton arrib a a la izquiera: "main" -> luego seleccionamos la versión que queremos montar: "v1.0.0" -> le ponemos como nombre: "1.0.0-rc-1" //#versiónMayor.#NuevasFuncionalidadesMismaApp.#BugFixes-ajustes-rc=releaseCandidate-versión1
         10.3 seleccionamos create branch
-        10.4 hicimos algunos ajustaes para mejorar el performance como crear la opcion en el puerto ||3000, comentar el puerto en el .env 
+        10.4 hicimos algunos ajustaes para mejorar el performance como:
+            * en el archivo package.json montamos un script en "scripts" agregando:{"start":"node app.js"}  --- y guardamos los cambios como new script added
+            *comentamos los archivos .env con un # antes del port
+            *en alrchivo models->server.js, y en la parte de PORT se le pone la opcion de ...env.PORT || 3000 
         10.5 montamos en railway +new project->selecciono el proyecto-> como no quiero desplegar el main sino mi rama agrego +add variables-> voy a settings y cambio el main por la rama 1.0.0-rc-1 -> vamos a deployments... cuando esté en succes hacemos click -> en deploy logs veo donde lo está sirviendo (el peurto)
         10.6 para verlo desde internet voy a settings > click en "generate domain" -> se genera un dominio y lo despliega:
     11. Clase 115 - Protip: Ambiente de produccion y desarrollo en postman
