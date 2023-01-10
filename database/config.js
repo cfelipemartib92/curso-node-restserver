@@ -11,13 +11,13 @@
         try {
             //--7.conexión a mongo - va a regresar una promesa
                 //--8. agrego el url desde el.env en MONGODB_CNN
-            await mongoose.connect(process.env.MONGODB_CNN, {
+            await mongoose.connect(process.env.MONGODB_CNN/*, {
                 //--9. Mando los objetos pedidos en la documentación - ya no se pone
                 //userNewUrlParser: true,
                 //useUnifiedTopology: true,
                 //useCreateIndex: true,
                 //useFindAndModify: false
-            });
+            }*/);
 
             console.log('Base de datos onLine');
 
