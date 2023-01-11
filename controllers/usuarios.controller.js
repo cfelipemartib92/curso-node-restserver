@@ -139,12 +139,17 @@ const Usuario=require('../models/usuario');//U mayus permite crear instancias de
     const usuariosDelete = async (req, res=response)=> {
         //21.2 disponer del id
             const {id} = req.params;
+
+        //27.8 extraemos el uid del request y lo asignamos a una nueva variable uid
+            //const uid = req.uid; vamos a usar el req.usuario
         //21.3 borrar fisicamente
             //const usuario = await Usuario.findByIdAndDelete(id);
             //const mensaje = `Ha sido eliminado el usuario con id: ${id} `;
         //21.4 borrar escondiendolo
             const usuario = await Usuario.findByIdAndUpdate(id, {estado:false});
             const mensaje = `Ha sido eliminado el usuario con id: ${id} `;
+        //28.1 Autenticar rol de usuario
+            const usuarioAutenticado = await req.usuario;
         //imprimir
         res.status(202).json({//le mando status 200 (OK)
             //ok: true,
@@ -152,7 +157,10 @@ const Usuario=require('../models/usuario');//U mayus permite crear instancias de
             //id
             //voy a retornar el usuario que acaba de ser borrado
             mensaje,
-            usuario
+            usuario,
+            //27.8 agregamos el uid nuevo para que lo imprima:
+            usuarioAutenticado,
+            //usuarioAutenticado
         });//le pongo JSON
     }
 

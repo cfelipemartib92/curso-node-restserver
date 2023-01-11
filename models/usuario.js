@@ -38,7 +38,9 @@
 
 //16.21 creo una función para 
 UsuariosSchema.methods.toJSON = function (){//tiene que ser una función normal - el this es interno
-    const {__v,password,...usuario} = this.toObject();//instancia con los valores respectivos
+    const {__v,password,_id,...usuario} = this.toObject();//instancia con los valores respectivos
+    //26.2 quiero mostrar el _id como uid entonces le asigno los valores de id:
+    usuario.uid = _id; 
     return usuario;//esto me permite retornar el usuario mas no el v y el password
 }
 

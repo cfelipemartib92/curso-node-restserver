@@ -220,6 +220,104 @@
             #_ git push
             --Aparece un error y nos sugiere usar el siguiente comando para crear el branch
             #_ git push --set-upstream origin 2.0.0
+    23. CREAR UNA RUTA DE AUTENTICACIÓN----------------CLASE 147--------------------
+        23.1 buscamos crear una nueva url de autenticación -POST: {{url}}/api/auth/login
+        23.2 Crear controlador %_ auth.js con sus configuraciones
+        23.3 Crear Ruta %_ auth.js y la configuramos 
+            *(traemos los validadores,la función del router, la ruta al login llamando al controlador (importa el controlador automáticamente))
+        23.4 Especificar en el modelo del server 
+            * En el modelo server.js Creamos un nuevo path después de usuarios path para autenticación
+            * Vamos a la sección de routes() y creamos un nuevo metodo definiendo la ruta con el require
+        23.5 ajustamos la ruta para que reciba los nuevos valores de correo y password
+    24. LOGIN DE USUARIO ------------------------------------CLASE 148----------
+        24.1 En el controlador de auth configuramos el login, extrayendo el login y el password
+        24.2 evitar poner dos res en el flujo de una función del controlador
+        24.3 verificamos si el email existe, está activo, contraseña y luego generamos el JWT
+        24.3.1 llamamos el modelo usuario para la verificación de correo y su estado
+        24.3.2 llamamos el bcrypt para validación de contraseña
+    25. GENERAR JWT ------------------------------- CLASE 149----------------------
+        25.1 instalamos un nuevo paquete para generar los tokens:
+            * &_ npm install jsonwebtoken
+            * Se necesita convertir el callback en una promesa
+        25.2 actualizamos el controlador del auth en la sección de gernar el JWT
+        25.3 Creamos en los helpers un archivo llamado:
+            * %_ generar-jwt.js
+            * creamos su constante
+            25.3.1 en el helper importamos el npm jsonwebtoken 
+                * agregamos el public key que creamos en el el .env (25.4)
+                * agregamos el callback con el error y el token
+        25.4 en las variables de entorno agregamos el secret token key
+        25.5 se importa el helper de generar-jwt.js al controller de auth
+    26.  CAMBIAMOS VISUALMENTE :ID POR UID EN MONGOOSE --------- CLASE 150---------
+        26.1 en el modelo extraemos el _id del escquema (secciñón 16.21)
+        26.2 mostramos el _id como uid asignando sus calores al usuario uid en el modelo usuarios
+    27  PROTEGER RUTAS MEDIANTE USO DE TOKEN  - MIDDLEWARES ---CLASE 151 ----------
+        27.1 Creamos validación para que elemine un user sólo si tiene un jwt valido
+        27.2  para eso vamos a crear un middleware llamado:    
+            * %_ validar-jwt.js
+            * dentro del middleware llamamos el paquete jsonwebtoken
+            * creamos la función validarJWT
+            * exportamos el middleware
+        27.3 para mandar lo jwt normalmente se manda en los headers de postman con el key llamaod authorization con un vlaue o le puedo poner algo personalizado para saber el header que están esperando... de igual manera se llamara: x-token en el header de la operación delete con el value del token: abc123
+            * key: x-token
+            * value: abc123
+        27.4 leemos el header en la función del middleware que tiene el nombre de la key y el token:   
+            * key: x-token
+            * value: abc123
+        27.5 agregamos el middleware en el router de usuarios (usuarios.route.js)
+            * se importa en el route
+            * agregamos la fución al delete
+        27.6 en el middleware jwt agregamos la validación 
+        27.7 extraemos el uid del usuario en el middlewaer u la asignamos a la propiedad del request uid
+        27.8 en el controlador de los usuarios, en la funcióin usuarios delete podemos extraer el uid
+    28. OBTENER INFORMACIÓN DEL USUARIO AUTENTICADO ---------CLASE 152------------
+        28.1 en el middleware llamamos el modelo
+        28.2 en el middleware de validar agregamos el req.usuario (volvemos la función validar async) 
+        28.3 En el controller UsuarioDelete realizar las actualizaciones
+        28.4 Agregar validación que el usuario eliminado no se puede volver a logear
+            *en el middleware agreego la validación if (28.4)
+        28.5 validación que si el usuario está undefined que me lo saque
+    29. VERIFICAR ROL ADMINISTRADOR EN DELETE ---------------CLASE 153 -----------
+        29.1 Creamos un nuevo middleware llamado:
+            * %_ validar-reoles.js
+            * Se tiene que agregar después del middleware JWT
+        29.2 Agrego en el ROUTER de delete (usuarios.route.js) la función del middleware después del Mdwr JWT
+            * se importa y se agrega después del JWT
+    30. VERIFICAR QUE EL MIDDLEWARE TIENE UN ROLE ---------CLASE 154 ------------
+        30.1 Comentamos el middleware de validación de Admin
+        30.2 En el router Crear un validadro que pueda tener uno o varios role
+            *llamada:  tieneRole('ADMIN_ROLE','VENTAS_ROLE') (con los roles que queremos dejar pasar
+        30.3 Agregamos la función en el middleware de validador de roles y la función la llamaremos: tieneRole()
+        30.4 lo exportamos en el router de usuarios (agregamos dentro de los {} la función con los corchetes
+    31. OPTIMIZAR IMPORTACIONES EN NODE -----------------CLASE 155---------------
+        31.1 Podemos unificar las tres importaciones de middlewares en uno solo
+        31.2 Creamos en middlewares un archivo llamado:
+            * %_ index.js
+        31.3 copio todos las importaciones de middlewares en el router de usuarios y los pego en el middleware index.js
+        31.4 en el index.js cambiop lo que está en {} por unas constantes que denoten el llamado al archivo middleware
+        31.5 SUMARIZO TODAS LAS FUNCIONES EN constantes al momento de exportarlo con operador ...
+        32.6 aplico exportaciones al router con todas los middlewares unificados
+    32. DESPLIEGUE RAILWAY POR CUENTA PROPIA --------CLASE 156-------------------
+        32.1. Cambios en su repositorio
+            *git add .
+            *git checkout -b 3.0.0
+            *git commit -m "Fin sección 10 - version 3.0.0"
+        32.2.Crear y subir una rama
+            *git push
+            *(Ese comando dará un error)
+            *Usar el comando en la descripción del error para subir la rama.
+        32.3. En Railway, seleccionar la rama 3.0.0 para desplegar
+        32.4. Revisar si hay cambios en variables de entorno necesarias
+        32.5. Esperar que el deployment se realice, si aparecen errores, tratar de corregirlos y probar de nuevo.
+
+
+
+
+             
+
+
+
+        
 
 
 

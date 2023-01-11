@@ -6,8 +6,23 @@
     //16.16 importamos schema de roles
             //16.19.1me lelvo esta importación al db validators (helpers)
         //me lo llevo // const Role = require('../models/role');
-    //16.11 importmos el middleware validar campos 
+//31.3 Copio todas las importaciones de midlewares y las mego en el index.js middleware 
+/*  //16.11 importmos el middleware validar campos 
     const {validarCampos}= require('../Middlewares/validar-campos');
+    //27.5 Se importa el archivo donde está el middleware validadr del token
+    const { validarJWT } = require('../Middlewares/validar-jwt');
+    //29.2 & 30.4 Se importa el archivo donde está el middleware validadr el rol del usuario
+    const { esAdminRole, tieneRole } = require('../Middlewares/validar-roles');
+*/
+//32.6 llamo el index.js con todos los middlewares unificados:
+    const {
+        validarCampos, 
+        validarJWT, 
+        esAdminRole, 
+        tieneRole
+    }=require('../Middlewares'/*/index - es opcional pero por default apunta a esto*/ )
+
+
     //16.20 conectamos con el helkper donde pusimos la validación del rol & 19.3
     const {esRolValido,emailExiste,existeUsuarioPorId} = require('../helpers/db-validators');
     //importamos la funcion del controlador para el get: 7.9
@@ -86,6 +101,12 @@
         //probando DELETE -- borrar cruD
             //21.1 agregamos id del delete
         router.delete('/:id', [
+            //27.5 agregamos el middleware validador del token
+            validarJWT,
+            //29.2 agregamos el middleware validador del usuario - 30.1
+            /*esAdminRole,*/  
+            //30.2 Middleaware que pueda ejecutar en uno o varios roles
+            tieneRole('ADMIN_ROLE','VENTAS_ROLE'),
             //validaciones 21.3.1
             check('id','No es un id valido').isMongoId(),
             check('id').custom(existeUsuarioPorId),

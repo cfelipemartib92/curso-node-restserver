@@ -16,6 +16,8 @@
                 //creando middlewares - funciones que añaden otra funcionalidad
             //7.6 creamos una constante que mantenga las rutas
             this.usuariosRoutePath= '/api/usuarios';
+            //23.4 cREAMOS El nuevo path para autenticación
+            this.authPath= '/api/auth';
             //14.4 Coneccion a base de datos mongo - le creo un metodo antes de middlewares
             this.conectarDB();
 
@@ -90,10 +92,11 @@
                     msg: 'patch API'
                 })//le pongo JSON
             });*/
+        //23.4 Creamos una nueva ruta para autenticación
+            this.app.use(this.authPath, require('../routes/auth.route'));
         //7.5 llamamos las rutas al server por medio de un middleware condicional:
             //7.6 le agregamos el string qe acabamos de crear arrib aen el constructor
-            this.app.use(this.usuariosRoutePath, require('../routes/usuarios.route'))
-
+            this.app.use(this.usuariosRoutePath, require('../routes/usuarios.route'));
         }
         
         //creo metodo para agregar el puerto
