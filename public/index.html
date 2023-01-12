@@ -4,10 +4,96 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Acceso denegado</title>
+        <title>Google Sign-in</title>
 
     </head>
     <body>
-        <h1>Acceso denegado</h1>
+        <h1>Google Sign-in</h1>
+        <hr>
+        
+        <!-- 34.5 -->
+        <div id="g_id_onload"
+            data-client_id="1097195241288-adniv9883u2ijhjesbte7mkp4n545lbs.apps.googleusercontent.com"
+            data-auto_prompt="false"
+            data-callback="handleCredentialResponse">
+            <!--34.4.1 Este es el callback que traemos-->
+            <!-- data-login_uri="https://your.domain/your_login_endpoint" Lo haremos de otra manera-->            
+        </div>
+        <div class="g_id_signin"
+            data-type="standard"
+            data-size="large"
+            data-theme="outline"
+            data-text="sign_in_with"
+            data-shape="rectangular"
+            data-logo_alignment="left">
+        </div>
+
+        <br><br>
+        <!--38.1 botón Logout de google -->
+        <button id="google_signout">
+            Signout
+        </button>
+
+        <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+        <!-- 34.4.2 esto viebne de documentación de google-->
+        <script>
+            function handleCredentialResponse(response) {
+                
+                //Google token: ID_TOKEN - este es el token de google según su documentación
+                    //console.log('id_token',response.credential);
+
+                //Creamos el body con el token {}
+                    const body={id_token:response.credential};
+                //35.7 Configuramos el auth con el front end - petición fetch
+                    //esto es una promesa por eso agregamos el then
+                    //por default fetch es get, lo volvemos a post
+                fetch('http://localhost:8080/api/auth/google', {
+                    method:'POST',
+                    headers: {
+                    "Content-Type":"application/json"
+                    },
+                    //se manda el body serializado - con el body de la constante arriba
+                    body: JSON.stringify(body)
+                })
+                    .then(resp=>resp.json())
+                    .then(resp=>{
+                    console.log(resp)
+                    //38.3 Guardamnos el correo de la persona que se autentico
+                    localStorage.setItem('email',resp.usuario.correo)
+                    })
+                    .catch(console.warn);
+               
+               /* NO LO VAMOS A UTILIZAR SÓLO VAMOS A MANDAR EL GOOGLE TOKEN 
+               // decodeJwtResponse() is a custom function defined by you
+               // to decode the credential response.
+               const responsePayload = decodeJwtResponse(response.credential);
+          
+               console.log("ID: " + responsePayload.sub);
+               console.log('Full Name: ' + responsePayload.name);
+               console.log('Given Name: ' + responsePayload.given_name);
+               console.log('Family Name: ' + responsePayload.family_name);
+               console.log("Image URL: " + responsePayload.picture);
+               console.log("Email: " + responsePayload.email);*/
+            }
+
+            //38.2 FUNCIÓN LOGOUT 
+            const button = document.getElementById('google_signout');
+            button.onclick=()=>{
+
+                console.log(google.accounts.id)
+                google.accounts.id.disableAutoSelect()
+
+                //38.4 Usamos correo para lkogout
+                google.accounts.id.revoke(localStorage.getItem('email'), done=>{//mandamo este callback done
+                    //con este callback limpiamos el localstorage
+                    localStorage.clear();
+                    //recargar la página y vaciar lo que tenga el estado de la app
+                    location.reload();
+                });
+
+            }
+
+        </script>
     </body>
-</html>
+    </html>

@@ -309,6 +309,92 @@
         32.3. En Railway, seleccionar la rama 3.0.0 para desplegar
         32.4. Revisar si hay cambios en variables de entorno necesarias
         32.5. Esperar que el deployment se realice, si aparecen errores, tratar de corregirlos y probar de nuevo.
+    
+    ------------------   GOOGLE SIGN IN - FRONT END Y BACKEND    ----------------
+
+    33. GENERAR API Key y API SECRET DE GOOGLE----------CLASE 162----------------
+        33.1 Vamos al enlace de google identity: https://developers.google.com/identity/gsi/web/guides/overview
+        33.1.1 Vamos a lsa sección de setup en la barra de menú de la izquiera
+        33.1.2 Seguir las instrucciones: https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid
+            *Open the Credentials page of the Google APIs console.
+            Create or select a Google APIs project. If you already have a project for the Sign In With Google button or Google One Tap, use the existing project and the web client ID.
+            
+            *If your project doesn't have a Web application-type client ID, click Create credentials > OAuth client ID to create one. Be sure to include your site's domain in the Authorized JavaScript origins box. Please note that Google One Tap can only be displayed in HTTPS domains. When you perform local tests or development, you must add both http://localhost and http://localhost:<port_number> to the Authorized JavaScript origins box. The Referrer-Policy header must also be set to no-referrer-when-downgrade when using http and localhost.
+
+            *Key Point: Google One Tap can only be displayed in HTTPS domains.
+            *Key Point: Add both http://localhost and http://localhost:<port_number> to the Authorized JavaScript origins box for local tests or development.
+            *Key Point: Set the Referrer-Policy: no-referrer-when-downgrade header when testing using http and localhost.
+            *Note: You need the client ID string that's displayed in the console to configure Sign In With Google and to verify ID tokens on your backend. A client ID looks like the following example:
+            *1234567890-abc123def456.apps.googleusercontent.com
+        33.1.3 Hacemos click en Google APIs Console-> luego creamos la cuenta-> creamos un nuevo proyecto-> seleccionamos el nuevo proyecto-> vamos a credenciales (dentro de apis y servicios menu de la izquierda) ->  click en el enlace de pantalla de concentimiento (del siio de google identity setup)-> pantalla de consentimiento (en el enlace que nos abrió)->Seleccionamos externos y crear->llenamos la info del sitio-> Asigné el correo de softnetholding@gmail.com -> Desuès de página de consentimiento-> vamos a credenciales -> Crear credenciales -> ID de cliente de OAuth->Asignamos aplicación web-> Agreegamos nombre -> agregar URI como: http://localhost y http://localhost:8080 -> Crear -> se generaron dos códigos: 
+            *id de cliente: 1097195241288-adniv9883u2ijhjesbte7mkp4n545lbs.apps.googleusercontent.com
+            *secreto del cliente: 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 (Esto sirve para hacer verificaciones)
+        creamos dos variables de entorno con estos códigos ()
+
+    34. USUARIO DE GOOGLE FORNT END--------------------------------CLASE 163---
+        34.1 AGREGAMOS BOTÓN DE GOOGLE SIGNIN
+        34.2 Vamos a nuestro archivo público en localhost8080
+        34.3 en la documentación vamos a "Display the Sign In With Google button"  (opciones del menu a la izquierda) 
+        34.3.1 Copiamos y pegamos el script en el body "<script src="https://accounts.google.com/gsi/client" async defer></script>"
+        34.3.2 Copiamos y pegamos todo el codigo del html de la sección donde muestr el código y lo pegamos en el body
+        34.3.3 Eliminamos en el index.html el login uri para hacerlo semimanual -es una redirección a nuestro endpoint
+        34.4 Luego vamos en la documentación a "Handle credential responses with JavaScript functions" https://developers.google.com/identity/gsi/web/guides/handle-credential-responses-js-functions
+        34.4.1 Copiamos el código de calllback y lo traemos
+        34.4.2 Copiamos y pegamos todo el resto del script y lo pegamos hacia el final (34.4.2)
+        34.5 Asignamos el client id en el index donde corresponde (en el div con id "g_id_onload" en la función data-client_id )
+        34.6 En el script retiramos la función y sólo imprimimos en consola el google token
+        34.7 En el explorador podemos ver el boton y podemos salir accediendo a inspeccionar->application->cookies->elimnar todas las cookies
+        34.8
+    35. RUTA PARA MANEJAR AUTENTICACIÓN DE GOOGLE -------CLASE 164--------------------
+        35.1 Vamos a abrirl e token desde el backend
+        35.2 En la route out.js creamos una nueva autenticación para google
+        35.3 en auth.controller.js definimos un nuevo controlador para autenticación de google
+        35.4 En el router del auth.route.js llamamos el controlador después de validar campos // se importa en en el router en la sección de arriba entre los {}
+        35.6 probamos en pstman el nuevo endpoint de /google
+        35.7 llamamos el endpoint basado en nuestro front end, en el index.html procedemos con su configuración:
+        36.8 Ahora que recibimos el token en el backend lo abrimos y extraemos toda su información 
+    36. VALIDAR TOKEN DE GOOGLE EN BACKEND --------------------- CLASE 165-----------
+        36.1 Vamos a la documentaciónd egoogle para verificar google id token is in our server side https://developers.google.com/identity/gsi/web/guides/verify-google-id-token
+        36.2 Sleccionamos la librería de Node e instalamos el npm de la librería:
+            * &_ npm install google-auth-library --save
+        36.3 Creamos un nuevo archivo en los helpers donde pondremos la nueva función de verificación de google llamado:
+            * %_ google-verify.js
+            * copiamos y pegamos el script  para node de: https://developers.google.com/identity/gsi/web/guides/verify-google-id-token
+        36.4 Haemos algunso cambios en este nuevo archivo de google (helpers->google-verify.js)
+        36.5 Usaremos la función GoogleVerify() en el auth controller como un trycatch
+        36.6 Vamos al helper google-verify y ajustamos un return 
+    37. CREAR UN USUARIO PERSONALIZADO CON LAS CREDENCIALES DE GOOGLE --CLASE 166---
+        37.1 lO GUARDAREMOS EN LA BASE DE DATOS Y GENERAREMOS UN jwt PARA QUE EL usuario pueda usar su autenticación vs nuestra propia validación
+        37.2 En el auth controller verificacmnos si el correo existe en la base de datos
+        37.3 Revisamos si el usuario no existe lo tengo que crear en el autch controller
+        37.4 Revisamos si el usuario ya fue bloqueado (eliminado de la bd)
+        37.5 generamos el jwt
+    38. LOGOUT - GOOGLE IDENTITY
+        38.1 En el index agregamos un botón para logout
+        38.2 Debajo de la función de handlecredenciales agregamos una nueva función para logout
+        38.3 en el script del index en la función handle response, en el resp guardamos el correo en el local storage  
+        38.4 Usamos el correo guardado en el local storage para llamarlo en el signout del logout
+    39. REDESPLIEGUE EN RAILWAY -------CLASE 168----------------------------------
+        39.1 1. Cambios en su repositorio
+            #_ git checkout -b 4.0.0
+            #_ git add .
+            #_ git commit -m "Fin sección 11 - version 4.0.0"
+        2.Crear y subir una rama
+            #_ git push
+            (Ese comando dará un error)
+            Usar el comando en la descripción del error para subir la rama.
+        3. Ajustes para el performance:
+            * en el archivo package.json montamos un script en "scripts" agregando:{"start":"node app.js"}  --- y guardamos los cambios como new script added
+            *comentamos los archivos .env con un # antes del port
+            *en alrchivo models->server.js, y en la parte de PORT se le pone la opcion de ...env.PORT || 3000 
+        3. En Railway, seleccionar la rama 4.0.0 para desplegar
+        4. Revisar si hay cambios en variables de entorno necesarias
+        5. Esperar que el deployment se realice, si aparecen errores, tratar de corregirlos y probar de nuevo.
+        
+
+
+
+
 
 
 
@@ -321,8 +407,4 @@
 
 
 
-        
-
-
-
-
+    

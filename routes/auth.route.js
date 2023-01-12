@@ -4,8 +4,8 @@
         const {Router} = require('express');
     //16.2 se crea la conección al metodo check de express validator
         const {check}=require('express-validator');
-    //23.4 Se importa automáticamente el controller
-        const { login } = require('../controllers/auth.controller');
+    //23.4 Se importa automáticamente el controller & 35.4 El controller
+        const { login, googleSignIn } = require('../controllers/auth.controller');
     //Se importa el middleware de validación
         const { validarCampos } = require('../Middlewares/validar-campos');
 
@@ -16,10 +16,19 @@
         router.post('/login',[
             //check para validar el correo y contraseña
                 check('correo','El correo es obligatorio').isEmail(),
-                  check('password','El password es obligatorio').not().isEmpty(),//no está vacía
+                check('password','El password es obligatorio').not().isEmpty(),//no está vacía
             //llamamos el custom middleware de validar campos
                 validarCampos
         ] ,login );
+
+        //35.2 Autenticación de google
+        router.post('/google',[
+            //checkiamos el id token de google
+                check('id_token','id_token de google es necesario').not().isEmpty(),
+            //llamamos el controlador 
+                validarCampos
+        //35.4 Llamamos el controlador de autenticacióin google (auth.controller.js)
+        ] , googleSignIn );
 
     //Exportamos el router
         module.exports=router;
