@@ -14,10 +14,21 @@
             this.port=process.env.PORT;
             //3.3.1 servimos carpeta publica 
                 //creando middlewares - funciones que añaden otra funcionalidad
-            //7.6 creamos una constante que mantenga las rutas
-            this.usuariosRoutePath= '/api/usuarios';
-            //23.4 cREAMOS El nuevo path para autenticación
-            this.authPath= '/api/auth';
+
+            //42.6 Unificamos el path en un sólo objeto en lugar de tener "this.usuariosRoutePath= '/api/usuarios';" lo metemos así:
+            this.paths = {
+                //7.6 creamos una constante que mantenga las rutas "anteriormente como "this.usuariosRoutePath= '/api/usuarios';""
+                usuarios: '/api/usuarios',
+                //23.4 cREAMOS El nuevo path para autenticación (anteriormente fuera de este objeto como "this.authPath= '/api/auth';")
+                auth:'/api/auth',
+                //42.5 Nueva ruta del path llamada categorías
+                categorias: '/api/categorias',
+                //44.1 Nueva Ruta del path llamada Productos
+                productos: '/api/productos',
+                //45.4 Mueva ruta de buscar
+                buscar: '/api/buscar',
+            }
+            
             //14.4 Coneccion a base de datos mongo - le creo un metodo antes de middlewares
             this.conectarDB();
 
@@ -93,10 +104,18 @@
                 })//le pongo JSON
             });*/
         //23.4 Creamos una nueva ruta para autenticación
-            this.app.use(this.authPath, require('../routes/auth.route'));
+        //42.6 cómo unificamos los path cambiamos el this actual " this.app.use(this.authPath, require('../routes/auth.route'));" por otro:
+            this.app.use(this.paths.auth, require('../routes/auth.route'));
         //7.5 llamamos las rutas al server por medio de un middleware condicional:
             //7.6 le agregamos el string qe acabamos de crear arrib aen el constructor
-            this.app.use(this.usuariosRoutePath, require('../routes/usuarios.route'));
+        // 42.6 Ajuste del this como arriba - anterirmente como: "this.app.use(this.usuariosRoutePath, require('../routes/usuarios.route'));" 
+            this.app.use(this.paths.usuarios, require('../routes/usuarios.route'));
+        //42.5 Llamamos el path categorías para utilizar el controlador de categorias
+            this.app.use(this.paths.categorias, require('../routes/categorias.route'));
+        //44.1 Importación path Productos
+            this.app.use(this.paths.productos, require('../routes/productos.route'));
+        //44.1 Importación path Buscar
+            this.app.use(this.paths.buscar, require('../routes/buscar.route'));
         }
         
         //creo metodo para agregar el puerto

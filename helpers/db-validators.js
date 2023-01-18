@@ -2,8 +2,9 @@
 const mongoose = require('mongoose');
 //16.19.1 traigo la importación del modelo
 const Role = require('../models/role');
-//17.1 importo el modelo de usuarios
-const Usuario = require('../models/usuario');
+//17.1 importo el modelo de usuarios y categorias 43.4.3
+/*const Usuario = require('../models/usuario');*/
+const {Usuario, Categoria, Producto} = require('../models')
 
 const esRolValido = async (rol='')=>{//verificación personalizada con el custom - minimo es un string vacio ''
     const existeRol = await Role.findOne({rol}); //importamos el schema - buscar uno que el rol sea = a rol
@@ -27,10 +28,40 @@ const existeUsuarioPorId = async (id='')=>{
             };
 }
 
+//43.4.3 AQUÍ VALIDAMOS QUE LA CATEGORÍA EXISTA
+const existeCategoriaPorId = async (id='')=>{
+    const existeCategoria = await Categoria.findById(id);//Función encontrar uno igual
+        if(!existeCategoria){
+            throw new Error(`La categoría con id: ${id} no está registrada`);
+        };
+}
+
+//43.4.3 AQUÍ VALIDAMOS QUE EL PRODUCTO EXISTA
+const existeProductoPorId = async (id='')=>{
+    const existeProducto = await Producto.findById(id);//Función encontrar uno igual
+        if(!existeProducto){
+            throw new Error(`El producto con id: ${id} no está registrado`);
+        };
+}
+
+//43.8 Validamos que no se pueda instertar categoría existente
+
+// const categoriaTrue = async (id)=>{
+
+//     const {estado} = await Categoria.findOne({id,estado});
+
+//     if(!estado){
+//             throw new Error(`La categoría ${nombre} ha sido exterminada`);
+//     };
+// };
+
+
 module.exports={
     esRolValido,
     emailExiste,
-    existeUsuarioPorId    
+    existeUsuarioPorId,
+    existeCategoriaPorId,
+    existeProductoPorId
 }
 
 

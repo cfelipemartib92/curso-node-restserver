@@ -103,7 +103,7 @@ const Usuario=require('../models/usuario');//U mayus permite crear instancias de
 
 //FUNCION PUT - UPDATE
     const usuariosPut = async (req, res=response)=> {
-        //express ya lo parsea y lo pne en una propiedad del objeto request
+        //express ya lo parsea y lo pne en una propiedad del objeto request (extraemos el id)
         const {id} = req.params;
         //18.2 desestructuro info del request 
             //extraigo lo qu eno necesito

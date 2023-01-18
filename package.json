@@ -18,6 +18,14 @@
     "git": "^0.1.5",
     "google-auth-library": "^8.7.0",
     "jsonwebtoken": "^9.0.0",
-    "mongoose": "^6.8.1"
-  }
+    "mongoose": "^6.8.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cfelipemartib92/curso-node-restserver.git"
+  },
+  "bugs": {
+    "url": "https://github.com/cfelipemartib92/curso-node-restserver/issues"
+  },
+  "homepage": "https://github.com/cfelipemartib92/curso-node-restserver#readme"
 }

@@ -9,7 +9,8 @@
         const { generarJWT } = require("../helpers/generar-jwt");
     // 36.5 Se importa el helper con la función de googleVerify
         const { googleVerify } = require("../helpers/google-verify");
-const { DefaultTransporter } = require("google-auth-library");
+    //34 Se importo la librería de google
+        const { DefaultTransporter } = require("google-auth-library");
 
     //Función para controlar autenticación 
         const login = async (req,res = response)=>{

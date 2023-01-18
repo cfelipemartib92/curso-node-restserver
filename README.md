@@ -379,18 +379,174 @@
             #_ git checkout -b 4.0.0
             #_ git add .
             #_ git commit -m "Fin sección 11 - version 4.0.0"
-        2.Crear y subir una rama
+        39.2.Crear y subir una rama
             #_ git push
             (Ese comando dará un error)
             Usar el comando en la descripción del error para subir la rama.
-        3. Ajustes para el performance:
+        39.3. Ajustes para el performance:
             * en el archivo package.json montamos un script en "scripts" agregando:{"start":"node app.js"}  --- y guardamos los cambios como new script added
             *comentamos los archivos .env con un # antes del port
             *en alrchivo models->server.js, y en la parte de PORT se le pone la opcion de ...env.PORT || 3000 
-        3. En Railway, seleccionar la rama 4.0.0 para desplegar
+        39.4. En Railway, seleccionar la rama 4.0.0 para desplegar
+        39.5. Revisar si hay cambios en variables de entorno necesarias
+        39.6. Esperar que el deployment se realice, si aparecen errores, tratar de corregirlos y probar de nuevo.
+    40. GENERAR DOCUMENTACIÓN AUTOMÁTICA EN NUESTROS SERVICIOS -----CLASE 169------
+        40.1 rEGISTRAMOS UNA CUENTA EN Postman
+        40.2 * Hacemos click en los tres puntos del nombre de la colección
+            * Click en view documentation
+            * Se puede seleccionar el lenguaje - javascript - fetch o cURL
+            * sE Puede agregar comentarios - "estos son los endpoints disponibles"
+            * Vamos al engranaje para ajustar otras cosas
+            * Una vez terminado podemos ir a publish 
+            * Revisamos el webpage y luego de configurar click en publish 
+            * En el URL se puede ver toda la documentación una belleza
+
+     ------------------   CATEGORIAS Y PRODUCTOS    ----------------
+
+    41. * Tareas
+        * CRUD de categorías y productos
+        * Relaciones
+        * Populate
+        * Búsquedas
+        * Despliegues a producción
+    42. CRUD Y RUTAS DE CATEGORÍAS ---------------------------CLASE 175--------------
+        42.1 En postman quiero listar todas las categorías con el GET {{url}}/api/categorias
+        42.2 PRIMERO: creamos las rutas en el reouter con archivo llamado: 
+            * %_ categorías.js (Carpeta de rutas)
+        42.3 Copiamos y pegamos las importaciones de la ruta auth
+        42.4 SEGUNDO: creamos un controlador que se llame:
+            * %_ categorias.controller.js
+        42.5 TERCERO: En el modelo server.js se necesita definir la nueva ruta de categorias la cual llamaremos: "categorías"
+        42.5.1 clonamos la linea en routes y la configuramos  
+        42.6 Unificamos los path en un solo objeto y luego lo aplicamos en las routes
+        42.7 (VAMOS A UTILIZAR 5 SERVICIOS REST PARA ESTE TRABAJO (CASI SIEMPRE))
+        42.7.1 Creamos los servicios en la ruta del categorias (categorias.route)
+            *Get todas las categorías
+            *Get una categoiría
+            *POST crear una categoría
+            *PUT actualizar un id
+            *DELETE borrar categoría
+        42.8 CUARTO: Creamos el modelo de la categoría -----------clase 176
+            42.8.1 Creamos el modelo en la capreta de modelos con el archivo llamado: 
+            * %_ categoria.js
+            * podemos tomar como referencia el modelo del rol
+            * con ctrl f2 podemos cambiar el nombre de una const en todas sus instancias
+            * Agregamos los elementos del schema
+        42.9  Vamos a crear un index de modelos llamado: 
+            * %_ index.model.js
+            * Configuramos el index de modelos
+        42.10 CREAR UNA NUEVA CATEGORÍA ----------------------CLASE 177---------
+            * cREAR CATEGORÍA - requiere token valido para esto:
+                1. Usamos middleware de validar token
+                2. Actuyalizamos el route de post en el archivo categorias.route.js para que tenga la validación de JWT
+                3. Se importa al archivo de middlewares de Validar JWT
+                4. aGREGAMOS VALIDACIÓN DE CHECK DE NOMBRE
+                5. Agregamos la validación de que todos los campos estén correctos del middleware (debe estar en la importacion de los middlewares)
+        42.11 En el controlador de las categorias agregamos la función para crear categorias
+            1. Agregamos la función de crear categoría: crearCategoria()
+            2. Importamos el response automaticamente del express (al agregarlo en los parametros de la función req=response)
+            3. Exportamos el controleador con el module.exports
+            4. *TIP* Al grabar en mayus hace que choque en base de datos y permite validar que no hacyan repeticiones
+            5. Validamos si existe categoría previamente garabada
+                5.1 Importamos modelo de categoría
+            6. Generamos la data que vamos a grabar en DB
+            7. Hacemos la grabación de la data
+            8. Enviamos mensaje de que se grabo
+            9. Llamamos el controlador llamar categoría en la ruta de de categorías (categorias.routye.js)
+            10. Importamos en la ruta de categorías el controlador de categorias
+    43. CREAMOS LOS CRUD RESTANTES DE CATEGORIAS -----CLASE 178 ----
+        43.1 Creamos las funciones restantes en el controlador de categorias
+        43.2 Ajustamos las rutas para actualizarlas - en los que requiere id hacemos una validacion personalziada - middleware (id existe) - check('id').custom(existeCategoria)
+        si no existe tira un error
+        -En db validators usamos el -existeusuarioporid
+        -en el put que venga el nombre 
+        -que el id sea de mongo
+            *CONTROLADOR
+            *RUTAS
+                *MIDDLEWARE - VALIDACIÓNES (FUNCI`´ON PARA VALIDARLO) 
+                *Helper -existe vateogira 
+        43.3 RESOLUCIÓN DE CRUD: ----CLASE 179-------------
+            -----GET ALL----------------------
+            1. Creamos los controladores, exportamos y lo pegamos en la ruta (lo importamos, lo asignamos en la ruta )
+            1.1 Agregamos el populate (en el modedelo de categorías pasamos a json para que pueda ser leido)
+            1.2 En el modelo de categorias agregamos la condición para retirar la info que no queremos imprimir en el json
+            .2 Importamos el modelo de usuarios en el modelo de de categoría para que pudiera funcionar 
+        43.4 ------GET BY ID --------------------
+            1. HACER EL CONTROLADOR
+            2. IMPORTAMOS EN LAS RUTAS EL CONTROLADOR
+            3. AJUSTARMNOS LA RUTA DE GET por ID
+                * ASIGNAMOS EL CONTROLADOR NUEVO
+                * AGREGAMOS LAS VALIDACIONES (id existe, usar la validación de campos,validación que la categoría exista)
+                * CREAMOS UN HELPER PARA VALIDAR QUE LA CATEOGRÍA EXISTA (existeCategoria)
+                    * IMPORTAMOS EL MODELO CATEGORIAS
+                    * CREAMOS LA FUNCIÓN DE CATEGORÍAS
+                    * EXPORTAMOS LA FUNCIÓN DE CATEGORÍAS
+                *ASIGNAMOS EL HELPER VALIDADOR A LA ROUTE DE GETBYID
+        43.5 -------UPDATE --- CLASE 180-----------------
+            1. HACER EL CONTROLADOR Y EXPORTARLO
+            2. IMPORTAMOS EN LAS RUTAS EL CONTROLADOR
+            3. AJUSTARMNOS LA RUTA DE GET por ID
+                * ASIGNAMOS EL CONTROLADOR NUEVO
+                * AGREGAMOS LAS VALIDACIONES (validar el JWT, validar que el nombre se esté enviando, validar que exista la categoría, validar campos )
+        43.6 ---------DELETE--------------------------------
+            1. HACER EL CONTROLADOR Y EXPORTARLO
+            2. IMPORTAMOS EN LAS RUTAS EL CONTROLADOR
+            3. AJUSTARMNOS LA RUTA DE GET por ID
+                * ASIGNAMOS EL CONTROLADOR NUEVO
+                * AGREGAMOS LAS VALIDACIONES (validar JWT, es adminrole (lo importamos), validar quie sea un mongo id), validar que exista, validar campos
+    44. CREAR NUEVO MODELO DE PRODUCCIÓN ---CRUD---- CLASE 181---------------------
+        1. CREAR ARCHIVO DE RUTAS, CONTROLADORES, MODELO: 
+            * %_ productos.route.js - router
+            * %_ productos.controller.js - controller 
+            * %_ producto.js - modelo
+            * En el servidor(Model) creamos un nuevo Link
+                *Hacemos la importación en routes (de este mismo archivo)
+        2. CONFIGURACIÓN DE ARCHIVOS --- CLASE 181-182----------------------------
+            1. Configuramos el modelo (copy paste del modelo categorias)
+                *Ajustamos el index de modelos
+            2. Configuramos el index del modelo agregando el modelo producto
+            3. Configuramos los controladores --
+            4. Configuramos las rutas
+            5. Configuramos las validaciones
+            6. Coinfgiruamos los endpoints en Postman
+    45. RUTA PARA REALIZAR BÚSQUEDAS FLEXIBLES -------CLASE 183 -----------
+        1. creamos un nueva ruta, controlador llamada:
+            * %_ buscar.route.js - ruta
+            * %_ buscar.controller.js
+        2. Configuramos la ruta (creamos funcion router)
+            1. Importaciones - incluyendo el controlador de buscar
+            2. Generamos el router
+        3. Configuramos el controlador (funcion buscar)
+            1. Enlazamos con la ruta
+            2. El router 
+        4. Modufucamos el modelo del server
+            1. Agregamos el path con el nuevo url de 
+        5. Agregamos las validaciones ---- Clase 184-----------------
+            *Las agregamos en el mismo controlador ya que no es muy grande
+            *Ajustamos controlador de bùsqueda de usuario
+    46. BUSQUEDAS EN OTRAS COLECCIONES ----- CLASE 186 --------------
+        1. Copiar y pegar y ajustar en el controlador de buscar (buscar.controller.js)
+    47. DESPLIEGUE EN RAILWAY:
+            * #_ git checkout -b 5.0.0
+            * #_ git add .
+            * #_ git commit -m "Fin sección 12 - version 5.0.0"
+        2.Crear y subir una rama
+            * #_ git push
+            * (Ese comando dará un error)
+            * Usar el comando en la descripción del error para subir la rama.
+        3. En Railway, seleccionar la rama 5.0.0 para desplegar
         4. Revisar si hay cambios en variables de entorno necesarias
-        5. Esperar que el deployment se realice, si aparecen errores, tratar de corregirlos y probar de nuevo.
-        
+        5. Esperar que el deployment se realice, si aparecen errores, tratar de corregirlos y probar de nuevo
+
+
+
+
+
+
+
+
+
+
 
 
 
