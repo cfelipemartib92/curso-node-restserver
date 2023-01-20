@@ -4,7 +4,8 @@
   "description": "0. Banderas:\r     0.1 comandos consola: #_\r     0.2 instalaciones : &_\r     0.3 Creación de archivo : %_",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start":"node app.js"
   },
   "keywords": [],
   "author": "",
