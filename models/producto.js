@@ -45,6 +45,11 @@
             type: Boolean,
             default: true
         },
+    //48.11.5 Creamos la propiedad para guardar la imagen
+        img: {
+            type: String            
+        }
+
     });
 
 //pasamos el modelo de usuario a Json para que pueda ser impreso (sacamos el _v y el estado de la impresión)

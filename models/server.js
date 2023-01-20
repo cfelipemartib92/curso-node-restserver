@@ -2,6 +2,8 @@
     const express = require('express')
 //6.4 traemos el CORS recien importado
     const cors = require('cors');
+//48.5 Importació paquete de montage de archivos npm i express-fileupload)
+    const fileUpload = require('express-fileUpload');
 //14.5 importa el archivo (coin el paso anterior automaticamente)
     const { dbConnection } = require('../database/config');
 
@@ -27,6 +29,8 @@
                 productos: '/api/productos',
                 //45.4 Mueva ruta de buscar
                 buscar: '/api/buscar',
+                //48.3. Ruta para uploads
+                uploads: '/api/uploads'
             }
             
             //14.4 Coneccion a base de datos mongo - le creo un metodo antes de middlewares
@@ -44,15 +48,23 @@
     //3.3.1 Creamos metodo para los midelwares - en este caso para servir la carpeta public
         middlewares(){
             //6.5 Agregamos los comandos para llamar el CORS recien integrado
-            this.app.use(cors());
+                this.app.use(cors());
+
             //8.1 configuramos el middleware para leer la info que nos llega-
                 //(LECTURA Y PARSEO BODY))
-            this.app.use(express.json());
-
+                this.app.use(express.json());
 
             //use es la palabra clave para los middlewares
                 //directorio publico:
-            this.app.use(express.static('public'));
+                this.app.use(express.static('public'));
+
+            //48.5 middleware paquete (i express-fileupload) -> File upload de archivos
+                //agrego el this. - e importamos el paquete que acabamos de instalar
+                this.app.use(fileUpload({
+                    useTempFiles : true,
+                    tempFileDir : '/tmp/',
+                    createParentPath: true
+                }));
         }
 
     //4.2 creo un metodo para definir las rutas (ENDPOINT)
@@ -116,6 +128,8 @@
             this.app.use(this.paths.productos, require('../routes/productos.route'));
         //44.1 Importación path Buscar
             this.app.use(this.paths.buscar, require('../routes/buscar.route'));
+        //48.3 Importación path Uploads
+            this.app.use(this.paths.uploads, require('../routes/uploads.route'));
         }
         
         //creo metodo para agregar el puerto

@@ -18,7 +18,8 @@
             type:String,
             required: [true,'La contraseña es obligatoria']
         },
-        img :{ // url de la imagen usuario 
+        
+        img: { // url de la imagen usuario 
             type:String
         },
         rol: {

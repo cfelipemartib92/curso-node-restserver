@@ -534,9 +534,130 @@
             * #_ git push
             * (Ese comando dará un error)
             * Usar el comando en la descripción del error para subir la rama.
+            * #_ git push --set-upstream origin 5.0.0
         3. En Railway, seleccionar la rama 5.0.0 para desplegar
+            1. AJUSTES DE PERFORMANCE:
+            * en el archivo package.json montamos un script en "scripts" agregando:{"start":"node app.js"}  --- y guardamos los cambios como new script added
+            * comentamos los archivos .env con un # antes del port
+            * en alrchivo models->server.js, y en la parte de PORT se le pone la opcion de ...env.PORT || 300
         4. Revisar si hay cambios en variables de entorno necesarias
         5. Esperar que el deployment se realice, si aparecen errores, tratar de corregirlos y probar de nuevo
+        6. Nombre despliegue: curso-node-restserver
+    
+    
+    ----SECCION 13 - CARGA DE ARCHIVOS Y PROTECCION DE LOS MISMOS -------------------
+
+    48. Vamos a crear:
+        * %_ uploads.controller.js - controlador
+        * %_ uploads.route.js - routes
+        1. Configuramos las rutas 
+            * Copy paste rutas de auth
+            * Agregamos el controlador a una nueva ruta de
+        2. Configuramos el controlador con las funciones 
+            * importamos (express,)
+            * cargarArchivo()
+            * exportamos 
+        3. Configuramos el servidor (modelo->server)con las rutas y el path hacia el router
+            * agregamos el path (this.path)
+            * Importamos y asociamos el path a la route (seccion de abajo routes())
+        4. Lo probamos en el postman - creamos la url y la probamos con el post con / al final
+        5. Subimos el archiuvo en el servidor
+            * descargamos el paquete de express-fileupleoad mcon el comando:
+                * &_ npm i express-fileupload - npm i express-fileupload@1.2.1
+            * documentación: "https://www.npmjs.com/package/express-fileupload"
+            * Según la doc. agregamos el comando de su uso en la sección de middlewares del archivo models->server.js
+            * Importamos el nuevo paquete en el archivo de server
+        6. Enviamos la peticion post en postman con el body->form-data->key: archivo & value: el que seleccione
+            * en la documentación->vamosal sitio web que es un github-> vamos a server.js-> copiamos y pegamos lo que está dentro de la petición post y lo pegamos en el controlador en la función que creamos llamada cargarArchivo()
+            * Lo configuramos
+            * Creamos un nuevo directorio/carpeta donde vamos a subir archivos llamado:
+                * %_ uploads
+            * En el controlador uploads importamos el path para asignar paths más facilmente - lo ajustamos
+        7. Validamos la extension ----------------------Clase 194----------
+            * separamos y scamos la extension con las funciones split 
+            * Validar para permitir las extensiones que yo deseo:
+        8.  al moverlos le cambiamos el nombre del archivo con identificador único
+            * Instalamos el socket de id automaticas con el comando:
+                * &_ npm i uuid
+            * importamos el archivo al controlador de uploads
+            * Creamos nueva constante donde alojar el nuevo id - lo asignamos al upload
+        9. HELPER PARA SUBIR ARCHIVO - 
+            * Creamos un nuevo helper llamado: (funciones que ayudan)
+                * %_ index.js (para unificarlos)
+                    1. Configuramos el index
+                * %_ subir-archivo.js
+                    *Configuramos el helper con la función
+                    *Traemos toda la logica del controlador copiamos y pegamos dentoro de la promise
+                    *Importamos los paquetes del controler al uploads
+                    *Ajustamos y limpiamos el controlador (impresionnnombre)
+        10. CREAR CARPETAS DE DESTINO ----------CLASE 197-----------------------------
+            * Para asignar expresiones validas que quiero (en este caso tcx, md)
+            * en el controlador configuramos 
+                * utilizamos propiedad de express-fileupload llamada creatParentPath (documentacion) en el modelo server
+                    *Agregamos la propiedad en el server en la seccion de middlewares de fileupload * ,createParentPath: true
+                *Ya nos monta en la carpeta definida
+                * undefined en la parte de los recursos cuando no estén llenos
+            * borramos todo y creamos un archivo md en uploads para que si lo monte el git-- lo llamamos %_ readme.md
+        11. RUTA PARA ACTUALIZAR IMAGENES DE USUARIOS Y PRODUCTOS ---- CLASE 198---
+            1. Creamos el Path en la ruta de uploads y traemos la nueva funcion del controlador
+            2. Creamos la función en el controlador actualizarImagen() 
+            3. Agregamos las validaciones (check isMongoId, coleccion permitida,validarcampos para bloquear los checks)
+                * En el helper db-validator montamos la cusdtom validation de coleccionesPermitidas()
+                *En la ruta uploads importamos la función del helper coleccionesPermitidas()
+            4. En el controlador ajustamos la funcion para actualziar imagenes
+                *importamos los modelos parqa usarlos en la funcion actualizarImagen()
+            5. En el modelo creamos una propiedad para guardar la imagen
+            6. En el controlador configuramos para guardar la imagen llamada img
+                * traemos la linea donde se guardan los archivos
+            7. Copiamos y pegamos el validador de que si no se envía un archivo sale un error
+                * Vamos a hacer un middleware para poder aplicarlo más facilemtne en otras funciones, e llamara:
+                    * %_ validar-archivo.js - middleware
+                * Exportamos el middleware al index
+                * Montamos en las rutas el middleware 
+        12. BORRAR ARCHIVOS DEL SERVIDOR ------- CLASE 201-------------
+            1. en la propiedad img revisamos:
+                * Limpiar imagenes previas en el controlador - importamos el path
+                *Que el archivo exista en el servidor 
+    13. SERVICIO PARA MOSTRAR IMAGENES --------------CLASE 202--------
+        1. Creamos la ruta para mostrar imagenes en uploads.routes.js
+        2. Creamos el controlador en uploads.controller.js - copaimos y pegamos del actualizar imagen y ajustamos el if para que en lugar de borrar muestre la imagen
+        3. Creamos la carpeta:
+            * %_ assets y le montamos una imagen que mostraremos cuando no tenga imagen la coleccion
+            * Montamos la opcion en el codigo del controller en caso de que no
+    14. CLOUDINARY - SERVICIO MONTAR IMAGENES Y VIDEOS GRATIS --CLASE 204-
+        1. Instalamos el paquete npm de cloudinary:(https://www.npmjs.com/package/cloudinary)
+            * &_ npm i cloudinary
+        2. Creamos nuestra cuenta en cloudinary
+        3. Agregamos la url de cloudinary en nuestro archivo de .env: CLOUDINARY_URL
+        4. En el controlador de uploads importamos el paquete de cloudinary
+        5. Configuramos nuestra cuenta con cloudinary EN EL CONTROLADOR -seccion importaciones
+        6. configuramos otro controlador para actualizar imagen con cloudinary actualizarImagenCloudinary()
+            * lo exportamos 
+            * En la ruta usamos la función de cloudinary
+            * Actualizamos funcion actuializar imagen con nueva limpuieza
+            * Vamos a utilizar donde se guarda temporalmente las fotos para montarlo al server tempFilePath
+    15. ELIMNAR IMAGENES DE CLOUDINARY ---------  CLASE 206 --------
+        1. cONFIGURAMOS EL IF DEL controlador de actualziar cloudinary
+    16. DESPLIEGUE CON GIT
+        * #_ git checkout -b 6.0.0
+        * #_ git add .
+        * #_ git commit -m "Fin sección 13 - version 6.0.0"
+        
+        2.Crear y subir una rama
+            * #_ git push
+            * (Ese comando dará un error)
+            * Usar el comando en la descripción del error para subir la rama.
+            * #_ git push --set-upstream origin 5.0.0
+        3. En Railway, seleccionar la rama 5.0.0 para desplegar
+            1. AJUSTES DE PERFORMANCE:
+            * en el archivo package.json montamos un script en "scripts" agregando:{"start":"node app.js"}  --- y guardamos los cambios como new script added
+            * comentamos los archivos .env con un # antes del port
+            * en alrchivo models->server.js, y en la parte de PORT se le pone la opcion de ...env.PORT || 300
+        4. Revisar si hay cambios en variables de entorno necesarias
+        5. Esperar que el deployment se realice, si aparecen errores, tratar de corregirlos y probar de nuevo
+        6. Nombre despliegue: curso-node-restserver
+
+
 
 
 
