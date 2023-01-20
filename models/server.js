@@ -13,7 +13,7 @@
         constructor (){
             this.app=express();//donde voy a almacenar la const app
             //hago visible el puerto a todo el mundo desde el costructor
-            this.port=process.env.PORT;
+            this.port=process.env.PORT || 3000;
             //3.3.1 servimos carpeta publica 
                 //creando middlewares - funciones que añaden otra funcionalidad
 
